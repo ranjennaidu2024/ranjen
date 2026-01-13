@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
 
 type ApiKey = {
   id: string;
@@ -45,6 +46,7 @@ export default function GrootApiKeyDashboard() {
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "revoked">("all");
   const [filterEnvironment, setFilterEnvironment] = useState<"all" | "production" | "staging" | "development">("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Fetch API keys from the database
   useEffect(() => {
@@ -280,106 +282,16 @@ export default function GrootApiKeyDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-zinc-200 bg-white/50 backdrop-blur-sm p-6">
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
-              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-zinc-900">groot</span>
-          </div>
-
-          {/* User Profile */}
-          <div className="mb-6 rounded-xl bg-blue-50 px-4 py-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-sm font-bold text-white">
-                R
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-zinc-900">Personal</p>
-              </div>
-              <svg className="h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="space-y-1">
-          <a
-            href="/dashboards"
-            className="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-600"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-            Overview
-          </a>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            API Playground
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            Use Cases
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-            </svg>
-            Billing
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Settings
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            Certification
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-100">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Documentation
-            <svg className="ml-auto h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </button>
-        </nav>
-
-        {/* User Profile at Bottom */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-sm font-bold text-white">
-              R
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <p className="truncate text-sm font-medium text-zinc-900">Ranjen Naidu</p>
-            </div>
-            <svg className="h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </div>
-        </div>
-      </aside>
+      <Sidebar 
+        activePage="overview" 
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className={`overflow-auto transition-all duration-300 ${isSidebarOpen ? "ml-72" : "ml-0"}`}>
         <div className="mx-auto max-w-7xl px-6 py-8">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-zinc-500 mb-6">
@@ -394,9 +306,42 @@ export default function GrootApiKeyDashboard() {
               Overview
             </h1>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm">
+              <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm border border-zinc-200">
                 <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
                 <span className="text-sm font-medium text-zinc-700">Operational</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <a 
+                  href="https://github.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-50"
+                  title="GitHub"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                  </svg>
+                </a>
+                <a 
+                  href="https://twitter.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-50"
+                  title="Twitter"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a 
+                  href="mailto:contact@example.com"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-50"
+                  title="Email"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
@@ -483,10 +428,10 @@ export default function GrootApiKeyDashboard() {
             )}
 
             {/* API Keys Table */}
-            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-zinc-200 bg-zinc-50">
+                  <tr className="border-b border-zinc-200 bg-zinc-50/50">
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-600">
                       Name
                     </th>
@@ -495,9 +440,6 @@ export default function GrootApiKeyDashboard() {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-600">
                       Usage
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-600">
-                      Scopes
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-600">
                       Key
@@ -510,14 +452,16 @@ export default function GrootApiKeyDashboard() {
                 <tbody className="divide-y divide-zinc-200">
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center">
-                        <p className="text-sm text-zinc-500">Loading...</p>
+                      <td colSpan={5} className="px-6 py-12 text-center">
+                        <div className="flex justify-center">
+                          <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-900"></div>
+                        </div>
                       </td>
                     </tr>
                   ) : filteredKeys.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center">
-                        <p className="text-sm text-zinc-500">No API keys found</p>
+                      <td colSpan={5} className="px-6 py-12 text-center">
+                        <p className="text-sm text-zinc-500">No API keys found. Create your first key to get started.</p>
                       </td>
                     </tr>
                   ) : (
@@ -580,49 +524,6 @@ export default function GrootApiKeyDashboard() {
                           {/* Usage Column */}
                           <td className="px-6 py-4">
                             <div className="text-sm text-black">0</div>
-                          </td>
-
-                          {/* Scopes Column */}
-                          <td className="px-6 py-4">
-                            {isEditing ? (
-                              <div className="flex flex-wrap gap-1">
-                                {scopeOptions.map((scope) => (
-                                  <button
-                                    key={scope}
-                                    onClick={() =>
-                                      toggleScope(
-                                        editDraft.scopes,
-                                        scope,
-                                        (s) =>
-                                          setEditDraft((prev) => ({
-                                            ...prev,
-                                            scopes: s,
-                                          }))
-                                      )
-                                    }
-                                    className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-                                      editDraft.scopes.includes(scope)
-                                        ? "bg-zinc-900 text-white"
-                                        : "bg-zinc-100 text-black hover:bg-zinc-200"
-                                    }`}
-                                    type="button"
-                                  >
-                                    {scope}
-                                  </button>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="flex flex-wrap gap-1">
-                                {key.scopes.map((scope) => (
-                                  <span
-                                    key={scope}
-                                    className="rounded-md bg-zinc-900 px-2 py-1 text-xs font-medium text-white"
-                                  >
-                                    {scope}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
                           </td>
 
                           {/* Key Column */}
@@ -720,6 +621,22 @@ export default function GrootApiKeyDashboard() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Remote MCP Section */}
+          <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6">
+            <h2 className="text-2xl font-bold text-zinc-900 mb-3">Remote MCP</h2>
+            <p className="text-sm text-zinc-600 mb-4">
+              Connect directly to Groot's remote MCP server for a seamless experience without local installation or configuration. 
+              Select your desired API key and click the button below to generate the MCP connection URL. For examples on how to use the remote MCP, click{" "}
+              <a href="#" className="font-medium text-blue-600 underline hover:text-blue-700">
+                here
+              </a>
+              .
+            </p>
+            <button className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700">
+              Generate MCP Connection URL
+            </button>
           </div>
         </div>
       </div>
