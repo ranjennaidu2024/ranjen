@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   activePage?: string;
@@ -8,7 +10,8 @@ interface SidebarProps {
   onToggle?: () => void;
 }
 
-export default function Sidebar({ activePage = "overview", isOpen = true, onToggle }: SidebarProps) {
+export default function Sidebar({ activePage, isOpen = true, onToggle }: SidebarProps) {
+  const pathname = usePathname();
   const [isPersonalDropdownOpen, setIsPersonalDropdownOpen] = useState(false);
 
   const navItems = [
@@ -30,7 +33,7 @@ export default function Sidebar({ activePage = "overview", isOpen = true, onTogg
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       ),
-      href: "/api-playground",
+      href: "/playground",
     },
     {
       id: "use-cases",
@@ -146,7 +149,7 @@ export default function Sidebar({ activePage = "overview", isOpen = true, onTogg
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-3">
         {navItems.map((item) => {
-          const isActive = activePage === item.id;
+          const isActive = activePage === item.id || pathname === item.href;
           const baseClasses = "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors";
           const activeClasses = isActive
             ? "bg-blue-50 text-blue-600"
@@ -171,14 +174,14 @@ export default function Sidebar({ activePage = "overview", isOpen = true, onTogg
           }
 
           return (
-            <a
+            <Link
               key={item.id}
               href={item.href}
               className={`${baseClasses} ${activeClasses}`}
             >
               {item.icon}
               <span>{item.label}</span>
-            </a>
+            </Link>
           );
         })}
       </nav>
